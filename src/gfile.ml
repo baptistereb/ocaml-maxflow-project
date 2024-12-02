@@ -127,7 +127,7 @@ let export path (graph : string graph) =
 
   fprintf ff "  node [shape = doublecircle]; ";
 
-  (* Write all nodes (with fake coordinates) *)
+  (* Write all nodes *)
   n_iter_sorted graph (fun id -> fprintf ff "%d " id) ;
   
   fprintf ff ";\n" ;
