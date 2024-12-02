@@ -5,7 +5,7 @@ let clone_nodes gr = n_fold gr new_node empty_graph
 
 (*  maps all arcs of gr by function f *)
 let gmap gr f = e_fold gr (fun gr arc -> new_arc gr {arc with lbl = f arc.lbl}) (clone_nodes gr)
- 
+
 (* adds n to the value of the arc between id1 and id2. If the arc does not exist, it is created *)
 let add_arc g id1 id2 n= 
   match find_arc g id1 id2 with
@@ -13,7 +13,22 @@ let add_arc g id1 id2 n=
   | None -> let arc = {src = id1; tgt = id2; lbl = n} in new_arc g arc
 
 
-  (* Tools to do :
-  - Update graph :  take a list and a value -> add this value to all arc in the list
-  we must do a find_arc and if it doesn't find we try to do the arc in the other side with the value in negative
-    -Find path : find a patch and return a list of arc and a value : the max of increase *)
+(* Tools to do :
+   - Update graph :  take a list and a value -> add this value to all arc in the list
+     we must do a find_arc and if it doesn't find we try to do the arc in the other side with the value in negative
+     -Find path : find a patch and return a list of arc and a value : the max of increase *)
+
+ (* update_graph g l n : add n to all arcs in l. If an arc does not exist,it means that the arcs is in the otherside and the value is negative
+ raise Not_found if the arc does not exist in the graph *)
+let update_graph graph list value = 
+  let rec aux graph list value = 
+    match list with
+    | [] -> graph
+    | (id1, id2)::rest -> 
+      let graph = match find_arc graph id1 id2 with
+        | Some _ -> add_arc graph id1 id2 value
+        | None -> (match find_arc graph id2 id1 with
+          | Some _ -> add_arc graph id2 id1 (-value)
+          | None -> raise Not_found)
+      in aux graph rest value
+  in aux graph list value
