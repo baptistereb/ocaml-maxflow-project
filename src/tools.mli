@@ -12,3 +12,5 @@ val add_arc: int graph -> id -> id -> int -> int graph
  (* update_graph g l n : add n to all arcs in l. If an arc does not exist,it means that the arcs is in the otherside and the value is negative
  raise Not_found if the arc does not exist in the graph *)
 val update_graph: int graph -> (id*id) list -> int -> int graph
+
+val take_min: int graph -> (id * id) list -> int -> int

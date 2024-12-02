@@ -34,10 +34,10 @@ let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> 
     with
     | Not_found -> []
 
-let path_to_list s =
-  let numbers = List.map int_of_string (String.split_on_char ' ' s) in
+let path_to_list numbers =
   let rec build_pairs = function
     | x :: (y :: _ as rest) -> (x, y) :: build_pairs rest
     | _ -> []
   in
   build_pairs numbers
+

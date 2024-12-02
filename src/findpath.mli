@@ -7,4 +7,4 @@ val child_nodes: 'a graph -> id -> id list
 val find_path: 'a graph -> id -> id -> ('a arc -> bool) -> id list
 
 (* for example take [1;0;2;4] into [(1,0);(0,2);(2,4)]*)
-val path_to_list: string -> (int * int) list
+val path_to_list: int list -> (int * int) list
