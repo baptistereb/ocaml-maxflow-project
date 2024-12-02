@@ -12,23 +12,15 @@ let add_arc g id1 id2 n=
   | Some arc -> let new_lbl = arc.lbl + n in new_arc g {arc with lbl = new_lbl} 
   | None -> let arc = {src = id1; tgt = id2; lbl = n} in new_arc g arc
 
-
-(* Tools to do :
-   - Update graph :  take a list and a value -> add this value to all arc in the list
-     we must do a find_arc and if it doesn't find we try to do the arc in the other side with the value in negative
-     -Find path : find a patch and return a list of arc and a value : the max of increase *)
-
- (* update_graph g l n : add n to all arcs in l. If an arc does not exist,it means that the arcs is in the otherside and the value is negative
- raise Not_found if the arc does not exist in the graph *)
+ (* update_graph g l n : update the gap graph *)
 let update_graph graph list value = 
   let rec aux graph list value = 
     match list with
     | [] -> graph
     | (id1, id2)::rest -> 
       let graph = match find_arc graph id1 id2 with
-        | Some _ -> add_arc graph id1 id2 value
-        | None -> (match find_arc graph id2 id1 with
-          | Some _ -> add_arc graph id2 id1 (-value)
-          | None -> raise Not_found)
+        | None -> raise Not_found
+        | Some _ -> let graph = add_arc graph id1 id2 (-value) in
+                    add_arc graph id2 id1 value
       in aux graph rest value
   in aux graph list value
