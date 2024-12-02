@@ -1,5 +1,6 @@
 open Gfile
 open Tools
+open Findpath
     
 let () =
 
@@ -28,12 +29,13 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
-    (* do some stuff on the graph, here add a new arc (if this work all functions in tools work) *)
-    let intgraph = add_arc (gmap graph (fun x -> (int_of_string x))) 0 4 42 in
-      let newgraph = gmap intgraph (fun x -> string_of_int(x)) in
+  (*let () = export outfile graph in *)
+  let graph = gmap graph (fun x -> (int_of_string x)) in
 
-
-  (* Rewrite the graph that has been read. *)
-  let () = write_file outfile newgraph in    
+  let id_list =path_to_list (find_path graph 0 5 (fun arc -> arc.lbl > 0)) in
+  let min = take_min graph id_list max_int in
+  let graph = update_graph graph id_list min in
+  (*List.iter (fun x -> Printf.printf "%d " x) id_list; Printf.printf "\n\n%d " min*)
+  let graph = gmap graph (fun x -> (string_of_int x)) in
+  let () =export outfile graph in 
   ()
-
