@@ -2,7 +2,7 @@
 
 src?=0
 dst?=5
-graph?=testgraph.txt
+graph?=graph1.txt
 graphdot?=outfile
 
 all: build
