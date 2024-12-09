@@ -1,13 +1,13 @@
 open Gfile
 open Tools
 open Findpath
-let rec mainloop graph p1 p2 =
+let rec mainloop graph p1 p2 fl=
   let id_list =path_to_list (find_path graph p1 p2 (fun arc -> arc.lbl > 0)) in
   match id_list with
-  |[] -> graph
+  |[] -> (fl,graph) 
   |_ -> let min = take_min graph id_list max_int in
   let graph = update_graph graph id_list min in
-  mainloop graph p1 p2
+  mainloop graph p1 p2 (fl+min)
 
 let () =
 
@@ -30,8 +30,8 @@ let () =
   and outfile = Sys.argv.(4)
   
   (* These command-line arguments are not used for the moment. *)
-  and _source = int_of_string Sys.argv.(2)
-  and _sink = int_of_string Sys.argv.(3)
+  and source = int_of_string Sys.argv.(2)
+  and sink = int_of_string Sys.argv.(3)
   in
 
   (* Open file *)
@@ -43,7 +43,7 @@ let () =
   let min = take_min graph id_list max_int in
   let graph = update_graph graph id_list min in*)
   (*List.iter (fun x -> Printf.printf "%d " x) id_list; Printf.printf "\n\n%d " min*)
-  let graph= mainloop graph 0 5 in
+  let (fl,graph)= mainloop graph source sink 0 in
   let graph = gmap graph (fun x -> (string_of_int x)) in
   let () =export outfile graph in 
-  ()
+  Printf.printf "Le flot max = %d\n" fl ; ()
