@@ -2,7 +2,7 @@
 
 src?=0
 dst?=5
-graph?=graph1.txt
+graph?=testgraph.txt
 graphdot?=outfile
 
 all: build
@@ -23,7 +23,7 @@ demo: build
 	./ftest.exe graphs/${graph} $(src) $(dst) outfile
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
-
+	make dot
 clean:
 	find -L . -name "*~" -delete
 	rm -f *.exe
