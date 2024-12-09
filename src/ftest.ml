@@ -12,7 +12,7 @@ let rec mainloop graph p1 p2 fl=
 let () =
 
   (* Check the number of command-line arguments *)
-  if Array.length Sys.argv <> 5 then
+  if Array.length Sys.argv <> 6 then
     begin
       Printf.printf
         "\n ✻  Usage: %s infile source sink outfile\n\n%s%!" Sys.argv.(0)

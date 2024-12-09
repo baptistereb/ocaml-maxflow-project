@@ -20,10 +20,10 @@ edit:
 
 demo: build
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
-	./ftest.exe graphs/${graph} $(src) $(dst) outfile outfile2
+	./ftest.exe graphs/${graph} $(src) $(dst) outfile graphdepart
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
-	make dot graphdot="outfile2"
+	make dot graphdot="graphdepart"
 	make dot graphdot="outfile"
 clean:
 	find -L . -name "*~" -delete
