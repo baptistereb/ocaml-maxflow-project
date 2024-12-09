@@ -31,4 +31,4 @@ let update_graph graph list value =
     |(id1,id2)::rest -> let arc = find_arc graph id1 id2 in
           match arc with 
           | None-> raise Not_found
-          | Some x -> if x.lbl < acu then take_min graph rest x.lbl else take_min graph rest acu
+          | Some x -> if x.lbl < acu then take_min graph rest x.lbl else take_min graph rest aculet list_arc graph = e_fold graph (fun acu t -> t::acu) []

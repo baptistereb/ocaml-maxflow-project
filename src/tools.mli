@@ -13,4 +13,4 @@ val add_arc: int graph -> id -> id -> int -> int graph
  raise Not_found if the arc does not exist in the graph *)
 val update_graph: int graph -> (id*id) list -> int -> int graph
 
-val take_min: int graph -> (id * id) list -> int -> int
+val list_arc: int graph -> int arc list
