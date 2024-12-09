@@ -1,4 +1,5 @@
 open Graph
+open Tools
 
 let child_nodes (gr : 'a graph) (a: id) = List.map (fun x -> x.tgt) (out_arcs gr a)
   
@@ -41,3 +42,12 @@ let path_to_list numbers =
   in
   build_pairs numbers
 
+  let rec construction_gap_solution graph p1 p2 fl=
+  let id_list =path_to_list (find_path graph p1 p2 (fun arc -> arc.lbl > 0)) in
+  match id_list with
+  |[] -> (fl,graph) 
+  |_ -> let min = take_min graph id_list max_int in
+  let graph = update_graph graph id_list min in
+  construction_gap_solution graph p1 p2 (fl+min)
+
+let construct_flow_solution graph_dep graph = 
