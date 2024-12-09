@@ -19,7 +19,8 @@ let () =
         ("    🟄  infile  : input file containing a graph\n" ^
          "    🟄  source  : identifier of the source vertex (used by the ford-fulkerson algorithm)\n" ^
          "    🟄  sink    : identifier of the sink vertex (ditto)\n" ^
-         "    🟄  outfile : output file in which the result should be written.\n\n") ;
+         "    🟄  outfile : output file in which the result should be written.\n" ^
+         "    🟄  outfile2 : second output file.\n\n") ;
       exit 0
     end ;
 
@@ -28,6 +29,7 @@ let () =
   
   let infile = Sys.argv.(1)
   and outfile = Sys.argv.(4)
+  and outfile2 = Sys.argv.(5)
   
   (* These command-line arguments are not used for the moment. *)
   and source = int_of_string Sys.argv.(2)
@@ -36,6 +38,7 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
+  let () =export outfile2 graph in 
   (*let () = export outfile graph in *)
   let graph = gmap graph (fun x -> (int_of_string x)) in
 

@@ -20,16 +20,16 @@ edit:
 
 demo: build
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
-	./ftest.exe graphs/${graph} $(src) $(dst) outfile
+	./ftest.exe graphs/${graph} $(src) $(dst) outfile outfile2
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
-	make dot
+	make dot graphdot="outfile2"
+	make dot graphdot="outfile"
 clean:
 	find -L . -name "*~" -delete
 	rm -f *.exe
 	dune clean
 
 dot:
-	dot -Tsvg $(graphdot) > /tmp/imgdot.svg
-	xdg-open /tmp/imgdot.svg
-
+	dot -Tsvg $(graphdot) > /tmp/$(graphdot).svg
+	xdg-open /tmp/$(graphdot).svg
