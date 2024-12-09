@@ -51,3 +51,12 @@ let path_to_list numbers =
   construction_gap_solution graph p1 p2 (fl+min)
 
 let construct_flow_solution graph_dep graph = 
+  let return_graph = clone_nodes graph_dep in
+  let rec iter_on_arc arc =
+    let reverse_arc_graph = find_arc graph arc.tgt arc.src in
+    match reverse_arc_graph with
+    | None -> ()
+    | Some x -> let return_graph = add_arc return_graph arc.src arc.tgt x.lbl
+  in
+  e_iter graph_dep iter_on_arc in
+  return_graph
