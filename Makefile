@@ -3,6 +3,7 @@
 src?=0
 dst?=5
 graph?=graph1.txt
+graphdot?=outfile
 
 all: build
 
@@ -27,3 +28,8 @@ clean:
 	find -L . -name "*~" -delete
 	rm -f *.exe
 	dune clean
+
+dot:
+	dot -Tsvg $(graphdot) > /tmp/imgdot.svg
+	xdg-open /tmp/imgdot.svg
+
