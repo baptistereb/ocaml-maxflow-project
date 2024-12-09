@@ -1,5 +1,6 @@
 _build/
 outfile
+final
 graphdepart
 *~
 *.exe

@@ -50,13 +50,14 @@ let path_to_list numbers =
   let graph = update_graph graph id_list min in
   construction_gap_solution graph p1 p2 (fl+min)
 
-let construct_flow_solution graph_dep graph = 
+let construct_flow_solution graph_dep graph_end = 
   let return_graph = clone_nodes graph_dep in
-  let rec iter_on_arc arc =
-    let reverse_arc_graph = find_arc graph arc.tgt arc.src in
-    match reverse_arc_graph with
-    | None -> ()
-    | Some x -> let return_graph = add_arc return_graph arc.src arc.tgt x.lbl
-  in
-  e_iter graph_dep iter_on_arc in
-  return_graph
+  let dep_arc = list_arc graph_dep in 
+  let rec iter_on_arc graph =function
+    |[]-> graph
+    |arc::rest -> let rev_arc= find_arc graph_end arc.tgt arc.src in 
+    match rev_arc with
+    |None->iter_on_arc (add_arc graph arc.src arc.tgt 0) rest
+    |Some x ->iter_on_arc (add_arc graph arc.src arc.tgt x.lbl) rest
+in
+iter_on_arc return_graph dep_arc
