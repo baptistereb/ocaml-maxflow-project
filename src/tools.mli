@@ -13,6 +13,8 @@ val add_arc: int graph -> id -> id -> int -> int graph
  raise Not_found if the arc does not exist in the graph *)
 val update_graph: int graph -> (id*id) list -> int -> int graph
 
+  (* From a graph, a path and an acu, it return the smallest arc value *)
 val take_min: int graph -> (id * id) list -> int -> int
 
+  (* return all graph's arc *)
 val list_arc: int graph -> int arc list
