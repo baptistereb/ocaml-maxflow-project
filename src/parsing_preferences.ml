@@ -25,7 +25,7 @@ let from_preferences_file path =
 
   (* ici on construit la liste des choix*)
   let rec read_choices lines acu =
-    let id = List.length acu + 1 in
+    let id = List.length acu + 2 in
     match lines with
     | [] -> List.rev acu
     | line :: rest ->
@@ -46,7 +46,7 @@ let from_preferences_file path =
 
   (* ici on construit la liste des candidats *)
   let rec read_peoples lines acu =
-    let id = List.length acu + 1 in
+    let id = (List.length acu) + 2 + (List.length choices_final_list) in
     match lines with
     | [] -> List.rev acu
     | line :: rest ->
