@@ -19,8 +19,6 @@ let () =
         ) ;
       exit 0
     end ;
-  Printf.printf "YOYOYOYOY";
-
 
   let start_time = Unix.gettimeofday () in
   let infile = Sys.argv.(1)
