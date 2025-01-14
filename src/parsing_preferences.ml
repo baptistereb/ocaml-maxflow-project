@@ -71,3 +71,28 @@ let from_preferences_file path =
   (people_final_list, choices_final_list) (* ce que retourne from_preferences_file *)
 
 
+
+
+
+
+let rec debug_lire_choices choices = 
+  match choices with
+  | [] -> ()
+  | a::rest -> (
+    let (id, choices, capacity) = a in  
+    let () = Printf.printf "choice = %d %s %d\n" id choices capacity in
+    debug_lire_choices rest
+  )
+
+let rec debug_lire_peoples peoples = 
+  match peoples with
+  | [] -> ()
+  | a::rest ->
+    let (id, name, voeux) = a in
+    let rec lire_voeux l acu =
+      match l with
+      | [] -> acu
+      | a::rest -> (lire_voeux rest (acu^" "^(string_of_int a)))
+    in let choices = (lire_voeux voeux "")
+    in let () = Printf.printf "people = %d %s %s\n" id name choices
+    in debug_lire_peoples rest
