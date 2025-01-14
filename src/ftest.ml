@@ -19,8 +19,10 @@ let () =
         ) ;
       exit 0
     end ;
+  Printf.printf "YOYOYOYOY";
 
 
+  let start_time = Unix.gettimeofday () in
   let infile = Sys.argv.(1)
   and outfile = Sys.argv.(2)
   and begin_graph = Sys.argv.(3)
@@ -38,4 +40,7 @@ let () =
   let graph = gmap graph (fun x -> (string_of_int x)) in
   let () = export_all_to_txt outfile list_peoples list_sport in
   let () = export final_graph graph in
-  Printf.printf "Le flot max = %d\n" fl2 ; ()
+  let () = Printf.printf "Le flot max = %d\n" fl2 in
+  let end_time = Unix.gettimeofday () in
+  let delta_time = end_time -. start_time in
+  Printf.printf "Temps d'execution du programme = %.4f secondes\n" delta_time ; ()
