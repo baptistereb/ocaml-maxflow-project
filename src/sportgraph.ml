@@ -35,9 +35,9 @@ let results_to_list_peoples graphfinal preferences capacities =
       (student_name, wish_name)::(aux graphfinal rest capacities)
   in aux graphfinal preferences capacities
 
-let results_to_list_sport graphfinal preferences capacities= 
+let results_to_list_sport graphfinal preferences capacities = 
   let rec aux graphfinal preferences capacities = 
-    (*Parcours la liste des sport et créé une liste d'association sport-[Liste personnes]*)
+    (*Parcours la liste des sports et créé une liste d'association sport-[Liste personnes]*)
     match capacities with
     | [] -> []
     | (wish_id, wish_name, _)::rest -> 
@@ -45,10 +45,27 @@ let results_to_list_sport graphfinal preferences capacities=
           let arc = find_arc graphfinal student_id wish_id in
           match arc with
           | None -> acu
-          | Some arc -> if arc.lbl = 1 then (student_name)::acu else acu
+          | Some arc -> if arc.lbl = 1 then student_name::acu else acu
         ) [] preferences in
       (wish_name, students)::(aux graphfinal preferences rest)
-  in aux graphfinal preferences capacities
+  in
+
+  let sports_results = aux graphfinal preferences capacities in
+
+  (* Ajouter une catégorie "Not Found" pour les étudiants non affectés *)
+  let not_found_students = List.fold_left (fun acu (student_id, student_name, wishes) ->
+      let has_assignment = List.exists (fun wish_id ->
+          match find_arc graphfinal student_id wish_id with
+          | Some arc -> arc.lbl = 1
+          | None -> false
+        ) wishes in
+      if not has_assignment then student_name::acu else acu
+    ) [] preferences in
+
+  if not_found_students = [] then
+    sports_results
+  else
+    ("Aucune Affectation", not_found_students) :: sports_results
 
 
 
@@ -65,11 +82,11 @@ let export_all_to_txt path list_peoples list_sports =
   List.iter (fun (name, wish) -> Printf.fprintf ff "%s est affecté au voeux %s\n" name wish) list_peoples;
   Printf.fprintf ff "\n\n";
   List.iter (fun (wish, students) -> 
-    Printf.fprintf ff "##################################\n";
-    Printf.fprintf ff "#####   %s\n" wish;
-    Printf.fprintf ff "- %s\n" (String.concat "\n- " students);
-    Printf.fprintf ff "##################################\n\n";
-  ) list_sports;
+      Printf.fprintf ff "##################################\n";
+      Printf.fprintf ff "#####   %s\n" wish;
+      Printf.fprintf ff "- %s\n" (String.concat "\n- " students);
+      Printf.fprintf ff "##################################\n\n";
+    ) list_sports;
 
   close_out ff
 
