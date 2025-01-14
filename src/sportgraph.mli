@@ -17,4 +17,4 @@ val results_to_list_sport: int graph -> (int * string * int list) list -> (int *
 val debug_print_list_sport: (string * string list) list -> unit
 
 (*export the lists into a txt*)
-val export_all_to_txt: string -> (string * string) list -> (string * string list) list -> unit
+val export_all_to_txt: string -> (string * string) list -> (string * string list) list -> (int * string * int) list -> unit

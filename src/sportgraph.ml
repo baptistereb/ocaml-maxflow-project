@@ -72,13 +72,18 @@ let debug_print_list_sport l =
   Printf.printf "Liste des résultats :\n";
   List.iter (fun (wish, students) -> Printf.printf "Le voeux %s est affecté aux personnes %s\n" wish (String.concat ", " students)) l
 
-let export_all_to_txt path list_peoples list_sports = 
+let export_all_to_txt path list_peoples list_sports capacities = 
+  let rec full_capacities search capacities =
+    match capacities with
+    | [] -> 0
+    | (_, name, capa)::rest -> if (name=search) then capa else (full_capacities search rest)
+  in 
   let ff = open_out path in
   List.iter (fun (name, wish) -> Printf.fprintf ff "%s est affecté au voeux %s\n" name wish) list_peoples;
   Printf.fprintf ff "\n\n";
   List.iter (fun (wish, students) -> 
       Printf.fprintf ff "##################################\n";
-      Printf.fprintf ff "#####   %s\n" wish;
+      Printf.fprintf ff "#####   %s - %d/%d\n" wish (List.length students) (full_capacities wish capacities);
       Printf.fprintf ff "- %s\n" (String.concat "\n- " students);
       Printf.fprintf ff "##################################\n\n";
     ) list_sports;

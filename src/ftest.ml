@@ -36,7 +36,7 @@ let () =
   let list_peoples = results_to_list_peoples graph preferences capacities in
   let list_sport = results_to_list_sport graph preferences capacities in
   let graph = gmap graph (fun x -> (string_of_int x)) in
-  let () = export_all_to_txt outfile list_peoples list_sport in
+  let () = export_all_to_txt outfile list_peoples list_sport capacities in
   let () = export final_graph graph in
   let () = Printf.printf "Le flot max = %d\n" fl2 in
   let end_time = Unix.gettimeofday () in
