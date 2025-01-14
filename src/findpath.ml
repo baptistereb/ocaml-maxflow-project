@@ -3,7 +3,7 @@ open Tools
 
 let child_nodes (gr : 'a graph) (a: id) = List.map (fun x -> x.tgt) (out_arcs gr a)
 
-let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> bool)= 
+let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> bool) = 
   let rec find_way s acu =
     let s_child = child_nodes gr s in
 
@@ -12,24 +12,22 @@ let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> 
       | Some x -> x
       | None -> raise Not_found
     in
-
-    if s == end_node then
+    if s = end_node then
       acu
     else
-      let next_rec = List.filter (fun x -> not (List.mem x acu)) s_child in
-      let rec fp list =
-        match list with
+      let next_nodes = List.filter (fun x -> not (List.mem x acu)) s_child in
+      let rec explore_children = function
         | [] -> raise Not_found
-        | x::rest -> 
-          try
-            if (filter (arc s x)) then
-              find_way x (acu@[x])
-            else
-              fp rest
-          with 
-          | Not_found -> fp rest
-      in fp next_rec
-  in 
+        | x :: rest ->
+          if filter (arc s x) then
+            try
+              find_way x (acu @ [x])
+            with Not_found -> explore_children rest
+          else
+            explore_children rest
+      in
+      explore_children next_nodes
+  in
   try
     find_way begin_node [begin_node]
   with
@@ -42,22 +40,24 @@ let path_to_list numbers =
   in
   build_pairs numbers
 
-let rec construction_gap_solution graph p1 p2 fl=
-  let id_list =path_to_list (find_path graph p1 p2 (fun arc -> arc.lbl > 0)) in
+let rec construction_gap_solution graph p1 p2 fl =
+  let id_list = path_to_list (find_path graph p1 p2 (fun arc -> arc.lbl > 0)) in
   match id_list with
-  |[] -> (fl,graph) 
-  |_ -> let min = take_min graph id_list max_int in
+  | [] -> (fl, graph)
+  | _ ->
+    let min = take_min graph id_list max_int in
     let graph = update_graph graph id_list min in
-    construction_gap_solution graph p1 p2 (fl+min)
+    construction_gap_solution graph p1 p2 (fl + min)
 
-let construct_flow_solution graph_dep graph_end = 
+let construct_flow_solution graph_dep graph_end =
   let return_graph = clone_nodes graph_dep in
-  let dep_arc = list_arc graph_dep in 
-  let rec iter_on_arc graph =function
-    |[]-> graph
-    |arc::rest -> let rev_arc= find_arc graph_end arc.tgt arc.src in 
+  let dep_arc = list_arc graph_dep in
+  let rec iter_on_arc graph = function
+    | [] -> graph
+    | arc :: rest ->
+      let rev_arc = find_arc graph_end arc.tgt arc.src in
       match rev_arc with
-      |None->iter_on_arc (add_arc graph arc.src arc.tgt 0) rest
-      |Some x ->iter_on_arc (add_arc graph arc.src arc.tgt x.lbl) rest
+      | None -> iter_on_arc (add_arc graph arc.src arc.tgt 0) rest
+      | Some x -> iter_on_arc (add_arc graph arc.src arc.tgt x.lbl) rest
   in
   iter_on_arc return_graph dep_arc

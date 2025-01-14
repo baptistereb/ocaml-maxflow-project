@@ -1,0 +1,13 @@
+Football;2;
+Basketball;1;
+Tennis;4;
+Natation;3;
+
+Alice;Football;Basketball;Tennis;
+Bob;Basketball;Football;Natation;
+Charlie;Natation;Tennis;Basketball;
+Diana;Tennis;Natation;Football;
+Eve;Football;Natation;Basketball;
+Frank;Basketball;Football;Tennis;
+Grace;Tennis;Basketball;Natation;
+Hank;Natation;Tennis;Football;

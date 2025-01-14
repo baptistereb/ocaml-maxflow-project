@@ -1,10 +1,11 @@
 .PHONY: all build format edit demo clean
 
-src?=0
-dst?=5
-graph?=graph1.txt
-graphdot?=outfile
-graphfinal?=final
+input?=preferences.txt
+
+graphdot?=graphfinal
+
+graphdepart?=graphdepart
+graphfinal?=graphfinal
 
 all: build
 
@@ -20,12 +21,13 @@ edit:
 	code . -n
 
 demo: build
-	@echo "\n   ⚡  EXECUTING  ⚡\n"
-	./ftest.exe graphs/${graph} $(src) $(dst) outfile graphdepart final
-	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
+	@echo -e "\n   ⚡  EXECUTING  ⚡\n"
+	./ftest.exe graphs/${input} outfile graphdepart graphfinal
+	@echo -e "\n   🥁  RESULT (content of outfile)  🥁\n"
+	@cat outfile
+	@echo -e "\n\n\n\n"
 	make dot graphdot="graphdepart"
-	make dot graphdot="outfile"
-	make dot graphdot="final"
+	make dot graphdot="graphfinal"
 clean:
 	find -L . -name "*~" -delete
 	rm -f *.exe
@@ -33,4 +35,4 @@ clean:
 
 dot:
 	dot -Tsvg $(graphdot) > /tmp/$(graphdot).svg
-	xdg-open /tmp/$(graphdot).svg
+	xdg-open /tmp/$(graphdot).svg > /dev/null 2>&1 &
