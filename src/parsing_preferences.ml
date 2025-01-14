@@ -62,11 +62,11 @@ let from_preferences_file path =
        with e ->
          Printf.printf "Cannot read node in line - %s:\n%s\n%!" (Printexc.to_string e) line;
          failwith "from_file")
-  
+
   in
 
   let people_final_list = read_peoples peoples [] in
-  
+
   close_in infile;
   (people_final_list, choices_final_list) (* ce que retourne from_preferences_file *)
 
@@ -79,10 +79,10 @@ let rec debug_lire_choices choices =
   match choices with
   | [] -> ()
   | a::rest -> (
-    let (id, choices, capacity) = a in  
-    let () = Printf.printf "choice = %d %s %d\n" id choices capacity in
-    debug_lire_choices rest
-  )
+      let (id, choices, capacity) = a in  
+      let () = Printf.printf "choice = %d %s %d\n" id choices capacity in
+      debug_lire_choices rest
+    )
 
 let rec debug_lire_peoples peoples = 
   match peoples with
