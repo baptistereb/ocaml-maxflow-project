@@ -1,28 +1,28 @@
 open Graph
 
-let build_graph preferences capacities =
+let build_graph peoples services =
   let graph = empty_graph in
   let source_id = 0 in
   let sink_id = 1 in
   let graph = new_node graph source_id in
   let graph = new_node graph sink_id in
   (*add nodes*)
-  let graph = List.fold_left (fun graph (student_id, _, _) -> new_node graph student_id) graph preferences in
-  let graph = List.fold_left (fun graph (wish_id,_, _) -> new_node graph wish_id) graph capacities in
+  let graph = List.fold_left (fun graph (student_id, _, _) -> new_node graph student_id) graph peoples in
+  let graph = List.fold_left (fun graph (wish_id,_, _) -> new_node graph wish_id) graph services in
   (*arc between student and source + between wish and sink *)
-  let graph = List.fold_left (fun graph (student_id, _, _) -> new_arc graph {src = source_id; tgt = student_id; lbl = 1}) graph preferences in
-  let graph = List.fold_left (fun graph (wish_id, _, capacity) -> new_arc graph {src = wish_id; tgt = sink_id; lbl = capacity }) graph  capacities in
+  let graph = List.fold_left (fun graph (student_id, _, _) -> new_arc graph {src = source_id; tgt = student_id; lbl = 1}) graph peoples in
+  let graph = List.fold_left (fun graph (wish_id, _, capacity) -> new_arc graph {src = wish_id; tgt = sink_id; lbl = capacity }) graph  services in
   (*arc between strudent and wishes*)
   let graph = List.fold_left (fun graph (student_id, _, wishes) ->
       List.fold_left (fun graph wish_id -> new_arc graph {src = student_id; tgt = wish_id; lbl = 1}) graph wishes
-    ) graph preferences in
+    ) graph peoples in
   graph
 
 
-let results_to_list_peoples graphfinal preferences capacities = 
-  let rec aux graphfinal preferences capacities = 
+let results_to_list_peoples graphfinal peoples services = 
+  let rec aux graphfinal peoples services = 
     (*Parcours la liste des gens et créé une liste d'association personne-sport*)
-    match preferences with
+    match peoples with
     | [] -> []
     | (student_id, student_name, wishes)::rest -> 
       let wish_id = List.fold_left (fun acu wish_id -> 
@@ -31,14 +31,14 @@ let results_to_list_peoples graphfinal preferences capacities =
           | None -> acu
           | Some arc -> if arc.lbl = 1 then wish_id else acu
         ) (-1) wishes in
-      let wish_name = List.fold_left (fun acu (id, name, _) -> if id = wish_id then name else acu) "Aucune affectation" capacities in
-      (student_name, wish_name)::(aux graphfinal rest capacities)
-  in aux graphfinal preferences capacities
+      let wish_name = List.fold_left (fun acu (id, name, _) -> if id = wish_id then name else acu) "Aucune affectation" services in
+      (student_name, wish_name)::(aux graphfinal rest services)
+  in aux graphfinal peoples services
 
-let results_to_list_sport graphfinal preferences capacities = 
-  let rec aux graphfinal preferences capacities = 
+let results_to_list_sport graphfinal peoples services = 
+  let rec aux graphfinal peoples services = 
     (* Parcours la liste des sports et créé une liste d'association sport-[Liste personnes] *)
-    match capacities with
+    match services with
     | [] -> []
     | (wish_id, wish_name, _) :: rest -> 
       let students = List.fold_left (fun acu (student_id, student_name, _) -> 
@@ -46,18 +46,18 @@ let results_to_list_sport graphfinal preferences capacities =
           match arc with
           | None -> acu
           | Some arc -> if arc.lbl = 1 then student_name :: acu else acu
-        ) [] preferences in
-      (wish_name, students) :: (aux graphfinal preferences rest)
+        ) [] peoples in
+      (wish_name, students) :: (aux graphfinal peoples rest)
   in
 
-  let sports_results = aux graphfinal preferences capacities in
+  let sports_results = aux graphfinal peoples services in
 
   let assigned_students = List.fold_left (fun acu (_, students) -> acu @ students) [] sports_results in
 
   let not_found_students = List.fold_left (fun acu (_, student_name, _) ->
       if List.mem student_name assigned_students then acu
       else student_name :: acu
-    ) [] preferences in
+    ) [] peoples in
 
   (* Retourne la liste des sports avec la catégorie "Aucune Affectation" ajoutée *)
   ("Aucune Affectation", not_found_students) :: sports_results
