@@ -37,35 +37,30 @@ let results_to_list_peoples graphfinal preferences capacities =
 
 let results_to_list_sport graphfinal preferences capacities = 
   let rec aux graphfinal preferences capacities = 
-    (*Parcours la liste des sports et créé une liste d'association sport-[Liste personnes]*)
+    (* Parcours la liste des sports et créé une liste d'association sport-[Liste personnes] *)
     match capacities with
     | [] -> []
-    | (wish_id, wish_name, _)::rest -> 
+    | (wish_id, wish_name, _) :: rest -> 
       let students = List.fold_left (fun acu (student_id, student_name, _) -> 
           let arc = find_arc graphfinal student_id wish_id in
           match arc with
           | None -> acu
-          | Some arc -> if arc.lbl = 1 then student_name::acu else acu
+          | Some arc -> if arc.lbl = 1 then student_name :: acu else acu
         ) [] preferences in
-      (wish_name, students)::(aux graphfinal preferences rest)
+      (wish_name, students) :: (aux graphfinal preferences rest)
   in
 
   let sports_results = aux graphfinal preferences capacities in
 
-  (* Ajouter une catégorie "Not Found" pour les étudiants non affectés *)
-  let not_found_students = List.fold_left (fun acu (student_id, student_name, wishes) ->
-      let has_assignment = List.exists (fun wish_id ->
-          match find_arc graphfinal student_id wish_id with
-          | Some arc -> arc.lbl = 1
-          | None -> false
-        ) wishes in
-      if not has_assignment then student_name::acu else acu
+  let assigned_students = List.fold_left (fun acu (_, students) -> acu @ students) [] sports_results in
+
+  let not_found_students = List.fold_left (fun acu (_, student_name, _) ->
+      if List.mem student_name assigned_students then acu
+      else student_name :: acu
     ) [] preferences in
 
-  if not_found_students = [] then
-    sports_results
-  else
-    ("Aucune Affectation", not_found_students) :: sports_results
+  (* Retourne la liste des sports avec la catégorie "Aucune Affectation" ajoutée *)
+  ("Aucune Affectation", not_found_students) :: sports_results
 
 
 
