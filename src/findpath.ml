@@ -4,7 +4,7 @@ open Tools
 let child_nodes (gr : 'a graph) (a: id) = List.map (fun x -> x.tgt) (out_arcs gr a)
 
 let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> bool) = 
-  let rec find_way s visited acu =
+  let rec find_way s acu =
     let s_child = child_nodes gr s in
 
     let arc x1 x2 = 
@@ -15,13 +15,13 @@ let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> 
     if s = end_node then
       acu
     else
-      let next_nodes = List.filter (fun x -> not (List.mem x visited)) s_child in
+      let next_nodes = List.filter (fun x -> not (List.mem x acu)) s_child in
       let rec explore_children = function
         | [] -> raise Not_found
         | x :: rest ->
           if filter (arc s x) then
             try
-              find_way x (x :: visited) (acu @ [x])
+              find_way x (acu @ [x])
             with Not_found -> explore_children rest
           else
             explore_children rest
@@ -29,7 +29,7 @@ let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> 
       explore_children next_nodes
   in
   try
-    find_way begin_node [begin_node] [begin_node]
+    find_way begin_node [begin_node]
   with
   | Not_found -> []
 
