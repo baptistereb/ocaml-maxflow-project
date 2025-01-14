@@ -25,7 +25,8 @@ demo: build
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
 	@cat outfile
 	make dot graphdot="graphdepart"
-	make dot graphdot="outfile"
+	# make dot graphdot="outfile"
+	xdg-open $(graphdot)
 	make dot graphdot="final"
 clean:
 	find -L . -name "*~" -delete
