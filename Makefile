@@ -23,7 +23,6 @@ demo: build
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
 	./ftest.exe graphs/${graph} $(src) $(dst) outfile graphdepart final
 	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
-	@cat outfile
 	make dot graphdot="graphdepart"
 	make dot graphdot="outfile"
 	make dot graphdot="final"
