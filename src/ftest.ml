@@ -18,12 +18,12 @@ let () =
 
 
   (* Arguments are : infile(1) source-id(2) sink-id(3) outfile(4) *)
-  
+
   let infile = Sys.argv.(1)
   and outfile = Sys.argv.(4)
   and outfile2 = Sys.argv.(5)
   and final = Sys.argv.(6)
-  
+
   (* These command-line arguments are not used for the moment. *)
   and source = int_of_string Sys.argv.(2)
   and sink = int_of_string Sys.argv.(3)

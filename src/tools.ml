@@ -12,7 +12,7 @@ let add_arc g id1 id2 n=
   | Some arc -> let new_lbl = arc.lbl + n in new_arc g {arc with lbl = new_lbl} 
   | None -> let arc = {src = id1; tgt = id2; lbl = n} in new_arc g arc
 
- (* update_graph g l n : update the gap graph *)
+(* update_graph g l n : update the gap graph *)
 let update_graph graph list value = 
   let rec aux graph list value = 
     match list with
@@ -21,7 +21,7 @@ let update_graph graph list value =
       let graph = match find_arc graph id1 id2 with
         | None -> raise Not_found
         | Some _ -> let graph = add_arc graph id1 id2 (-value) in
-                    add_arc graph id2 id1 value
+          add_arc graph id2 id1 value
       in aux graph rest value
   in aux graph list value
 
@@ -29,8 +29,8 @@ let rec take_min graph l acu =
   match l with 
   |[]->acu
   |(id1,id2)::rest -> let arc = find_arc graph id1 id2 in
-        match arc with 
-        | None-> raise Not_found
-        | Some x -> if x.lbl < acu then take_min graph rest x.lbl else take_min graph rest acu
+    match arc with 
+    | None-> raise Not_found
+    | Some x -> if x.lbl < acu then take_min graph rest x.lbl else take_min graph rest acu
 
 let list_arc graph = e_fold graph (fun acu t -> t::acu) []

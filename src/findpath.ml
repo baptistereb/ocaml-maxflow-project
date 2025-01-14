@@ -2,7 +2,7 @@ open Graph
 open Tools
 
 let child_nodes (gr : 'a graph) (a: id) = List.map (fun x -> x.tgt) (out_arcs gr a)
-  
+
 let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> bool)= 
   let rec find_way s acu =
     let s_child = child_nodes gr s in
@@ -30,10 +30,10 @@ let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> 
           | Not_found -> fp rest
       in fp next_rec
   in 
-    try
-      find_way begin_node [begin_node]
-    with
-    | Not_found -> []
+  try
+    find_way begin_node [begin_node]
+  with
+  | Not_found -> []
 
 let path_to_list numbers =
   let rec build_pairs = function
@@ -42,13 +42,13 @@ let path_to_list numbers =
   in
   build_pairs numbers
 
-  let rec construction_gap_solution graph p1 p2 fl=
+let rec construction_gap_solution graph p1 p2 fl=
   let id_list =path_to_list (find_path graph p1 p2 (fun arc -> arc.lbl > 0)) in
   match id_list with
   |[] -> (fl,graph) 
   |_ -> let min = take_min graph id_list max_int in
-  let graph = update_graph graph id_list min in
-  construction_gap_solution graph p1 p2 (fl+min)
+    let graph = update_graph graph id_list min in
+    construction_gap_solution graph p1 p2 (fl+min)
 
 let construct_flow_solution graph_dep graph_end = 
   let return_graph = clone_nodes graph_dep in
@@ -56,8 +56,8 @@ let construct_flow_solution graph_dep graph_end =
   let rec iter_on_arc graph =function
     |[]-> graph
     |arc::rest -> let rev_arc= find_arc graph_end arc.tgt arc.src in 
-    match rev_arc with
-    |None->iter_on_arc (add_arc graph arc.src arc.tgt 0) rest
-    |Some x ->iter_on_arc (add_arc graph arc.src arc.tgt x.lbl) rest
-in
-iter_on_arc return_graph dep_arc
+      match rev_arc with
+      |None->iter_on_arc (add_arc graph arc.src arc.tgt 0) rest
+      |Some x ->iter_on_arc (add_arc graph arc.src arc.tgt x.lbl) rest
+  in
+  iter_on_arc return_graph dep_arc
