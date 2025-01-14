@@ -31,7 +31,7 @@ let results_to_list_peoples graphfinal preferences capacities =
           | None -> acu
           | Some arc -> if arc.lbl = 1 then wish_id else acu
         ) (-1) wishes in
-      let wish_name = List.fold_left (fun acu (id, name, _) -> if id = wish_id then name else acu) "No match found" capacities in
+      let wish_name = List.fold_left (fun acu (id, name, _) -> if id = wish_id then name else acu) "Aucune affectation" capacities in
       (student_name, wish_name)::(aux graphfinal rest capacities)
   in aux graphfinal preferences capacities
 
@@ -62,8 +62,14 @@ let debug_print_list_sport l =
 
 let export_all_to_txt path list_peoples list_sports = 
   let ff = open_out path in
-  List.iter (fun (name, wish) -> Printf.fprintf ff "La personne %s est affecté au voeux %s\n" name wish) list_peoples;
+  List.iter (fun (name, wish) -> Printf.fprintf ff "%s est affecté au voeux %s\n" name wish) list_peoples;
   Printf.fprintf ff "\n\n";
-  List.iter (fun (wish, students) -> Printf.fprintf ff "Le voeux %s est affecté aux personnes %s\n" wish (String.concat ", " students)) list_sports;
+  List.iter (fun (wish, students) -> 
+    Printf.fprintf ff "##################################\n";
+    Printf.fprintf ff "#####   %s\n" wish;
+    Printf.fprintf ff "- %s\n" (String.concat "\n- " students);
+    Printf.fprintf ff "##################################\n\n";
+  ) list_sports;
+
   close_out ff
 
