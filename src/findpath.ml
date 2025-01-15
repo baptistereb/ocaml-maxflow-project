@@ -1,6 +1,7 @@
 open Graph
 open Tools
 
+(* prend la liste les fils de a dans le graphes : out_arcs prend les arcs sortants et le map permet de regarder le noeuf du noeud sortant *)
 let child_nodes (gr : 'a graph) (a: id) = List.map (fun x -> x.tgt) (out_arcs gr a)
 
 let find_path (gr: 'a graph) (begin_node: id) (end_node: id) (filter: 'a arc -> bool) = 
